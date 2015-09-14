@@ -7,7 +7,13 @@ import static org.fusesource.jansi.Ansi.Color.*;
 def cli = new CliBuilder(usage: 'maven-log-parser [options] logfile')
 cli.errlines(args:1, argName:'number', 'number of error lines which will be printed for each test')
 cli.knownissues(args:1, argName:'file', 'file, which contains list of known failed tests. Each test is described by its fully Class name. For example: package.Test.testMethod')
+cli.help('print this help')
 def options = cli.parse(args)
+
+if (options.getProperty('help')) {
+    cli.usage()
+    System.exit(0)
+}
 
 if (!options.arguments().size()) {
     println "Must specify path to the log file."
