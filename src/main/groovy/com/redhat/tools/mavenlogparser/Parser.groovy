@@ -3,7 +3,7 @@ package com.redhat.tools.mavenlogparser
 class Parser {
 
     def static startTest = /^.*\s+Start test\s+-+\s+(.+)$/
-    def static error = /^(.+)\((.+)\).+<<< ERROR!$/
+    def static error = /^(.+)\((.+)\).+<<< (ERROR!|FAILURE!)$/
     def static emptyLine = /^\s*$/
 
     static List<Test> parse(InputStream is) {
