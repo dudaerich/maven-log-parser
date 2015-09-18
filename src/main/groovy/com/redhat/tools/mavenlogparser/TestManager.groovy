@@ -19,4 +19,10 @@ class TestManager {
         }
     }
 
+    def addStop(testName) {
+        if (testMap[testName]) {
+            testMap[testName].stop = true
+        }
+    }
+
 }

@@ -6,4 +6,6 @@ class Test {
 
     def errors = []
 
+    def stop = false
+
 }

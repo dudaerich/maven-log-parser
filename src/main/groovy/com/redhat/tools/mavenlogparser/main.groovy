@@ -38,6 +38,8 @@ testsResult.each {
         println ansi().fg(YELLOW).a("${it.name} <<< KNOWN ISSUE").reset()
     } else if (it.errors.size()) {
         println ansi().fg(MAGENTA).a("${it.name} <<< ERROR").reset()
+    } else if (!it.errors.size() && !it.stop) {
+        println ansi().fg(MAGENTA).a("${it.name} <<< TIMEDOUT").reset()
     } else {
         println ansi().fg(GREEN).a("${it.name} <<< SUCCESS").reset()
     }

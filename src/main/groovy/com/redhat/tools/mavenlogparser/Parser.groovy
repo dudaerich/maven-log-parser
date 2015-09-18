@@ -3,6 +3,7 @@ package com.redhat.tools.mavenlogparser
 class Parser {
 
     def static startTest = /^.*\s+Start test\s+-+\s+(.+)$/
+    def static stopTest = /^.*\s+Stop test\s+-+\s+(.+)$/
     def static error = /^(.+)\((.+)\).+<<< (ERROR!|FAILURE!)$/
     def static emptyLine = /^\s*$/
 
@@ -15,10 +16,13 @@ class Parser {
         def processingTestError = false
         is.eachLine {line ->
             def isStartTest = line =~ startTest
+            def isStopTest = line =~ stopTest
             def isError = line =~ error
             def isEmptyLine = line =~ emptyLine
             if (isStartTest) {
                 testManager.addTest(new Test(name: isStartTest[0][1]))
+            } else if (isStopTest) {
+                testManager.addStop(isStopTest[0][1])
             } else if (isError) {
                 processingTestError = true
                 testError = []
