@@ -14,9 +14,10 @@ class TestManager {
     }
 
     def addError(testName, err) {
-        if (testMap[testName]) {
-            testMap[testName].errors.add(err)
+        if (!testMap[testName]) {
+            addTest(new Test(name: testName))
         }
+        testMap[testName].errors.add(err)
     }
 
     def addStop(testName) {
