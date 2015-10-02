@@ -21,7 +21,7 @@ if (!options.arguments().size()) {
     System.exit(1)
 }
 
-def errlines = options.getProperty('errlines')?:3
+def errlines = options.getProperty('errlines')?options.getProperty('errlines').toInteger():3
 def knownissues = options.getProperty('knownissues') ?
         new FileInputStream(options.getProperty('knownissues')).readLines().toSet()
         : new HashSet<String>()
