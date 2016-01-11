@@ -5,24 +5,49 @@ package com.redhat.tools.mavenlogparser
  */
 class TestManager {
 
+    def className = null
     def testList = []
     def testMap = [:]
 
-    def addTest(Test test) {
+    void setClass(className) {
+        this.className = className
+    }
+
+    String getTestName(String testName) {
+        if (className == null) {
+            return testName
+        } else {
+            return "${className}.${testName}"
+        }
+    }
+
+    boolean hasTest(String testName) {
+        def tname = getTestName(testName)
+        return testMap.containsKey(tname)
+    }
+
+    Test getTest(String testName) {
+        def tname = getTestName(testName)
+        return testMap[tname]
+    }
+
+    def addTest(testName) {
+        def tname = getTestName(testName)
+        Test test = new Test(name: tname)
         testList.add(test)
         testMap[test.name] = test
     }
 
     def addError(testName, err) {
-        if (!testMap[testName]) {
-            addTest(new Test(name: testName))
+        if (!hasTest(testName)) {
+            addTest(testName)
         }
-        testMap[testName].errors.add(err)
+        getTest(testName).errors.add(err)
     }
 
     def addStop(testName) {
-        if (testMap[testName]) {
-            testMap[testName].stop = true
+        if (hasTest(testName)) {
+            getTest(testName).stop = true
         }
     }
 

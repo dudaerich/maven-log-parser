@@ -2,8 +2,6 @@ package com.redhat.tools.mavenlogparser
 
 class Parser {
 
-    def static startTest = /^.*\s+Start test\s+-+\s+(.+)$/
-    def static stopTest = /^.*\s+Stop test\s+-+\s+(.+)$/
     def static error = /^(.+)\((.+)\).+<<< (ERROR!|FAILURE!)$/
     def static emptyLine = /^\s*$/
 
@@ -15,14 +13,17 @@ class Parser {
         def testErrorName = null
         def processingTestError = false
         is.eachLine {line ->
-            def isStartTest = line =~ startTest
-            def isStopTest = line =~ stopTest
+            def startClass = isStartClass(line)
+            def startTest = isStartTest(line)
+            def stopTest = isStopTest(line)
             def isError = line =~ error
             def isEmptyLine = line =~ emptyLine
-            if (isStartTest) {
-                testManager.addTest(new Test(name: isStartTest[0][1]))
-            } else if (isStopTest) {
-                testManager.addStop(isStopTest[0][1])
+            if (startClass != false) {
+                testManager.setClass(startClass[0][1])
+            } else if (startTest != false) {
+                testManager.addTest(startTest[0][1])
+            } else if (stopTest != false) {
+                testManager.addStop(stopTest[0][1])
             } else if (isError) {
                 processingTestError = true
                 testError = []
@@ -36,6 +37,50 @@ class Parser {
         }
 
         return testManager.testList
+    }
+
+    static Object isStartTest(String line) {
+        def tests = [
+            /^.*\s+Start test\s+-+\s+(.+)$/,
+            /^.*#\*#\*# Starting test: (.+)(\[.*\])?\(\)\.\.\.$/
+        ]
+
+        for (def test : tests) {
+            def result = line =~ test
+            if (result) {
+                return result
+            }
+        }
+        return false
+    }
+
+    static Object isStartClass(String line) {
+        def tests = [
+                /^Running (.+)$/
+        ]
+
+        for (def test : tests) {
+            def result = line =~ test
+            if (result) {
+                return result
+            }
+        }
+        return false
+    }
+
+    static Object isStopTest(String line) {
+        def tests = [
+            /^.*\s+Stop test\s+-+\s+(.+)$/,
+            /^.*#\*#\*# Finished test: (.+)(\[.*\])?\(\)\.\.\.$/
+        ]
+
+        for (def test : tests) {
+            def result = line =~ test
+            if (result) {
+                return result
+            }
+        }
+        return false
     }
 
 }
