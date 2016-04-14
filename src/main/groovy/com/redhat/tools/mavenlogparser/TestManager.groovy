@@ -17,7 +17,11 @@ class TestManager {
         if (className == null) {
             return testName
         } else {
-            return "${className}.${testName}"
+            if (testName.startsWith(className)) {
+                return testName
+            } else {
+                return "${className}.${testName}"
+            }
         }
     }
 
