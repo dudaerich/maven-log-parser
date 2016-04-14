@@ -4,6 +4,7 @@ class Parser {
 
     def static error = /^(.+)\((.+)\).+<<< (ERROR!|FAILURE!)$/
     def static emptyLine = /^\s*$/
+    def static time = /(^\d+:\d+:\d+,\d+) /
 
     static List<Test> parse(InputStream is) {
 
@@ -12,18 +13,26 @@ class Parser {
         def testError = []
         def testErrorName = null
         def processingTestError = false
+        def lastTime = null
         is.eachLine {line ->
             def startClass = isStartClass(line)
             def startTest = isStartTest(line)
             def stopTest = isStopTest(line)
             def isError = line =~ error
             def isEmptyLine = line =~ emptyLine
+            def isTime = line =~ time
+
+            if (isTime) {
+                lastTime = isTime[0][1]
+            }
+
             if (startClass != false) {
                 testManager.setClass(startClass[0][1])
             } else if (startTest != false) {
-                testManager.addTest(startTest[0][1])
+                testManager.addTimeForLastTest(lastTime)
+                testManager.addTest(startTest[0][1], lastTime)
             } else if (stopTest != false) {
-                testManager.addStop(stopTest[0][1])
+                testManager.addStop(stopTest[0][1], lastTime)
             } else if (isError) {
                 processingTestError = true
                 testError = []
@@ -35,6 +44,7 @@ class Parser {
                 testError.add(line)
             }
         }
+        testManager.addTimeForLastTest(lastTime)
 
         return testManager.testList
     }

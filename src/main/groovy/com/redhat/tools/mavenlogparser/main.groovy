@@ -34,18 +34,19 @@ def testsResult = Parser.parse(logfile)
 AnsiConsole.systemInstall();
 
 testsResult.each {
+
     if (it.errors.size() && knownissues.contains(it.name)) {
         print ansi().fg(CYAN).a("TEST ").reset()
-        println ansi().fg(YELLOW).a("${it.name} <<< KNOWN ISSUE").reset()
+        println ansi().fg(YELLOW).a("${it.name} <<< KNOWN ISSUE (${it.getDuration()})").reset()
     } else if (it.errors.size()) {
         print ansi().fg(CYAN).a("TEST ").reset()
-        println ansi().fg(MAGENTA).a("${it.name} <<< ERROR").reset()
+        println ansi().fg(MAGENTA).a("${it.name} <<< ERROR (${it.getDuration()})").reset()
     } else if (!it.errors.size() && !it.stop) {
         print ansi().fg(CYAN).a("TEST ").reset()
-        println ansi().fg(MAGENTA).a("${it.name} <<< TIMEDOUT").reset()
+        println ansi().fg(MAGENTA).a("${it.name} <<< TIMEDOUT (${it.getDuration()})").reset()
     } else if (showsuccess) {
         print ansi().fg(CYAN).a("TEST ").reset()
-        println ansi().fg(GREEN).a("${it.name} <<< SUCCESS").reset()
+        println ansi().fg(GREEN).a("${it.name} <<< SUCCESS (${it.getDuration()})").reset()
     }
     it.errors.each {
         it.take(errlines).each { println ansi().fg(RED).a(it).reset()}

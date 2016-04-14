@@ -35,23 +35,35 @@ class TestManager {
         return testMap[tname]
     }
 
-    def addTest(testName) {
+    void addTest(testName, time) {
         def tname = getTestName(testName)
-        Test test = new Test(name: tname)
+        Test test = new Test(name: tname, startTime: time)
+
         testList.add(test)
         testMap[test.name] = test
     }
 
-    def addError(testName, err) {
+    void addError(testName, err) {
         if (!hasTest(testName)) {
             addTest(testName)
         }
         getTest(testName).errors.add(err)
     }
 
-    def addStop(testName) {
+    void addStop(testName, time) {
         if (hasTest(testName)) {
-            getTest(testName).stop = true
+            Test test = getTest(testName)
+            test.stop = true
+            test.stopTime = time
+        }
+    }
+
+    void addTimeForLastTest(time) {
+        if (testList.size() > 0) {
+            Test lastTest = testList.get(testList.size() - 1)
+            if (lastTest.stopTime == null) {
+                lastTest.stopTime = time
+            }
         }
     }
 
