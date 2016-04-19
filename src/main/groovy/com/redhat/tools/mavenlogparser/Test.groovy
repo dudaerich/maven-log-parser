@@ -5,7 +5,7 @@ import org.apache.commons.lang.time.DurationFormatUtils
 
 class Test {
 
-    def name
+    String name
 
     def errors = []
 
@@ -14,6 +14,8 @@ class Test {
     def startTime = null
 
     def stopTime = null
+
+    PrintWriter testLog = null
 
     String getDuration() {
         try {
@@ -26,6 +28,32 @@ class Test {
             e.printStackTrace()
             return "???"
         }
+    }
+
+    void addLine(String line) {
+        if (!Settings.extractTestLogs) {
+            return
+        }
+        openTestLog()
+        testLog.println(line)
+    }
+
+    void close() {
+        if (testLog != null) {
+            testLog.close()
+        }
+    }
+
+    private void openTestLog() {
+        if (testLog != null) {
+            return
+        }
+        File dir = new File(Settings.testLogsDir)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        File testLogFile = new File(dir, name)
+        testLog = new PrintWriter(new FileOutputStream(testLogFile, false))
     }
 
 }

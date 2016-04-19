@@ -6,8 +6,9 @@ import static org.fusesource.jansi.Ansi.Color.*;
 
 def cli = new CliBuilder(usage: 'maven-log-parser [options] logfile')
 cli.e(longOpt: 'errlines', args:1, argName:'number', 'number of error lines which will be printed for each test')
-cli.s(longOpt: 'showsuccess', args:0, 'flag which defined whether you want to see success tests')
+cli.s(longOpt: 'showsuccess', args:0, 'flag which defines whether you want to see success tests')
 cli.k(longOpt: 'knownissues', args:1, argName:'file', 'file, which contains list of known failed tests. Each test is described by its fully Class name. For example: package.Test.testMethod')
+cli.x(longOpt: 'extract', args:0, 'flag which defines whether you want to extract test logs or not')
 cli.h(longOpt: 'help', 'print this help')
 def options = cli.parse(args)
 
@@ -20,6 +21,10 @@ if (options.arguments().size() == 0) {
     println "Must specify path to the log file."
     cli.usage()
     System.exit(1)
+}
+
+if (options.getProperty('extract')) {
+    Settings.extractTestLogs = true
 }
 
 def errlines = options.getProperty('errlines')?options.getProperty('errlines').toInteger():3

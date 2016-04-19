@@ -30,6 +30,7 @@ class Parser {
                 testManager.setClass(startClass[0][1])
             } else if (startTest != false) {
                 testManager.addTimeForLastTest(lastTime)
+                testManager.closeLastTest()
                 testManager.addTest(startTest[0][1], lastTime)
             } else if (stopTest != false) {
                 testManager.addStop(stopTest[0][1], lastTime)
@@ -43,8 +44,10 @@ class Parser {
             } else if (processingTestError) {
                 testError.add(line)
             }
+            testManager.addLineForLastTest(line)
         }
         testManager.addTimeForLastTest(lastTime)
+        testManager.closeLastTest()
 
         return testManager.testList
     }

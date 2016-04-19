@@ -35,6 +35,14 @@ class TestManager {
         return testMap[tname]
     }
 
+    Test getLastTest() {
+        if (testList.size() > 0) {
+            return testList.get(testList.size() - 1)
+        } else {
+            return null
+        }
+    }
+
     void addTest(testName, time) {
         def tname = getTestName(testName)
         Test test = new Test(name: tname, startTime: time)
@@ -59,11 +67,25 @@ class TestManager {
     }
 
     void addTimeForLastTest(time) {
-        if (testList.size() > 0) {
-            Test lastTest = testList.get(testList.size() - 1)
+        Test lastTest = getLastTest()
+        if (lastTest != null) {
             if (lastTest.stopTime == null) {
                 lastTest.stopTime = time
             }
+        }
+    }
+
+    void addLineForLastTest(String line) {
+        Test lastTest = getLastTest()
+        if (lastTest != null) {
+            lastTest.addLine(line)
+        }
+    }
+
+    void closeLastTest() {
+        Test lastTest = getLastTest()
+        if (lastTest != null) {
+            lastTest.close()
         }
     }
 
