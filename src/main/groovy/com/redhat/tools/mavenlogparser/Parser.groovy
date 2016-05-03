@@ -39,7 +39,7 @@ class Parser {
                 testError = []
                 testErrorName = "${isError[0][2]}.${isError[0][1]}"
             } else if (processingTestError && isEmptyLine) {
-                testManager.addError(testErrorName, testError)
+                testManager.addError(testErrorName, testError, lastTime)
                 processingTestError = false
             } else if (processingTestError) {
                 testError.add(line)

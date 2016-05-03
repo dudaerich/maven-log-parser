@@ -51,9 +51,9 @@ class TestManager {
         testMap[test.name] = test
     }
 
-    void addError(testName, err) {
+    void addError(testName, err, lastTime) {
         if (!hasTest(testName)) {
-            addTest(testName)
+            addTest(testName, lastTime)
         }
         getTest(testName).errors.add(err)
     }
