@@ -4,7 +4,7 @@ class Parser {
 
     def static error = /^(.+)\((.+)\).+<<< (ERROR!|FAILURE!)$/
     def static emptyLine = /^\s*$/
-    def static time = /(^\d+:\d+:\d+,\d+) /
+    def static time = /(\d+:\d+:\d+,\d+) /
 
     static List<Test> parse(InputStream is) {
 
