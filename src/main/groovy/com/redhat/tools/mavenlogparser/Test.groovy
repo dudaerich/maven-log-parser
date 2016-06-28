@@ -15,19 +15,31 @@ class Test {
 
     def stopTime = null
 
+    def duration = null
+
     PrintWriter testLog = null
 
-    String getDuration() {
+    String getDurationString() {
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss,SSS")
-            Date startDate = formatter.parse(startTime)
-            Date stopDate = formatter.parse(stopTime)
-            long diff = stopDate.getTime() - startDate.getTime()
-            return DurationFormatUtils.formatDuration(diff, 'HH:mm:ss')
+            return DurationFormatUtils.formatDuration(getDuration(), 'HH:mm:ss')
         } catch (Exception e) {
             e.printStackTrace()
             return "???"
         }
+    }
+
+    long getDuration() {
+        if (duration == null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss,SSS")
+            Date startDate = formatter.parse(startTime)
+            Date stopDate = formatter.parse(stopTime)
+            if (startDate != null && stopDate != null) {
+                duration = stopDate.getTime() - startDate.getTime()
+            } else {
+                duration = 0
+            }
+        }
+        return duration
     }
 
     void addLine(String line) {
