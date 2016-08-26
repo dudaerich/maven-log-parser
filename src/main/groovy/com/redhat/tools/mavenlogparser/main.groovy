@@ -38,6 +38,8 @@ def logfile = new FileInputStream(options.arguments()[0])
 
 def testsResult = Parser.parse(logfile)
 
+System.setProperty("jansi.force", "true")
+
 AnsiConsole.systemInstall();
 
 if (options.getProperty('sort')) {
