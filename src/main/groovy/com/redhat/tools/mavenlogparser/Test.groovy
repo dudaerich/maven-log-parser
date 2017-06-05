@@ -31,10 +31,13 @@ class Test {
     long getDuration() {
         if (duration == null) {
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss,SSS")
-            Date startDate = formatter.parse(startTime)
-            Date stopDate = formatter.parse(stopTime)
-            if (startDate != null && stopDate != null) {
+
+            if (startTime != null && stopTime != null) {
+
+                Date startDate = formatter.parse(startTime)
+                Date stopDate = formatter.parse(stopTime)
                 duration = stopDate.getTime() - startDate.getTime()
+
             } else {
                 duration = 0
             }
