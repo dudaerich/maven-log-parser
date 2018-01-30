@@ -6,7 +6,7 @@ import static org.fusesource.jansi.Ansi.Color.*;
 
 def cli = new CliBuilder(usage: 'maven-log-parser [options] logfile')
 cli.e(longOpt: 'errlines', args:1, argName:'number', 'number of error lines which will be printed for each test')
-cli.s(longOpt: 'showsuccess', args:0, 'flag which defines whether you want to see success tests')
+cli.s(longOpt: 'notshowsuccess', args:0, 'flag which defines whether you want to see success tests')
 cli.k(longOpt: 'knownissues', args:1, argName:'file', 'file, which contains list of known failed tests. Each test is described by its fully Class name. For example: package.Test.testMethod')
 cli.x(longOpt: 'extract', args:0, 'flag which defines whether you want to extract test logs or not')
 cli.S(longOpt: 'sort', args:1, argName:'field', 'sort tests by field. Possible values: name, duration')
@@ -29,8 +29,8 @@ if (options.getProperty('extract')) {
     Settings.extractTestLogs = true
 }
 
-def errlines = options.getProperty('errlines')?options.getProperty('errlines').toInteger():3
-def showsuccess = options.getProperty('showsuccess')?true:false
+def errlines = options.getProperty('errlines')?options.getProperty('errlines').toInteger() : Integer.MAX_VALUE
+def showsuccess = options.getProperty('notshowsuccess') ? false : true
 def knownissues = options.getProperty('knownissues') ?
         new FileInputStream(options.getProperty('knownissues')).readLines().toSet()
         : new HashSet<String>()
